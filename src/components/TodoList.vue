@@ -7,7 +7,7 @@
     </div>
     <button
       v-if="show_create_button"
-      class="btn btn-default"
+      class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
       href="#new_todo"
       data-toggle="modal"
     >

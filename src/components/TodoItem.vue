@@ -63,6 +63,7 @@
                   <input
                     v-model="item.complete"
                     type="checkbox"
+                    class="h-5 w-5 text-pink-600"
                     tabindex="-1"
                     @change="editTodoItem(item, todo_list.indexOf(todo_item))"
                   />
@@ -111,7 +112,7 @@
             <div class="col-6">
               <button
                 v-if="show_input"
-                class="btn btn-default btn-sm"
+                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 @click="addTodo(todo_list[todo_list.indexOf(todo_item)].id)"
               >
                 <i class="la la-plus"></i>
@@ -126,7 +127,7 @@
               </a>
               <button
                 v-else
-                class="btn btn-default btn-sm"
+                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 @click="
                   show_input = !show_input;
                   input_focus = true;
