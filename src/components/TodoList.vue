@@ -1,15 +1,17 @@
 <template>
   <div id="TodoList" v-cloak>
     <div ref="list" v-sortable="{ animation: 200, onUpdate: onSort }">
-      <div v-for="item in todo_list" :key="item.id" :id="item.id">
-        <TodoItem :todo_item="item" v-model:todo_list="todo_list" />
+      <div v-for="(item, index) in todo_list" :key="item.id" :id="item.id">
+        <TodoItem 
+          :todo_item="item"
+          v-model:todo_list="todo_list"
+          :index="index" 
+        />
       </div>
     </div>
     <button
       v-if="show_create_button"
       class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-      href="#new_todo"
-      data-toggle="modal"
     >
       New checklist
     </button>
@@ -39,13 +41,15 @@ export default {
     return {
       card_index: null,
       list_index: 0,
-      todo_list: {
-        title: "First list",
-        items: [
-          { id: 1, title: "Title 1", complete: false },
-          { id: 2, title: "Title 2", complete: true },
-        ],
-      },
+      todo_list: [
+        {
+          title: "First list",
+          items: [
+            { id: 1, title: "Title 1", complete: false },
+            { id: 2, title: "Title 2", complete: true },
+          ],
+        },
+      ],
       sort_items: {
         list: [],
       },

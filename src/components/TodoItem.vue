@@ -63,9 +63,9 @@
                   <input
                     v-model="item.complete"
                     type="checkbox"
-                    class="h-5 w-5 text-pink-600"
+                    class="h-5 w-5 text-pink-800"
                     tabindex="-1"
-                    @change="editTodoItem(item, todo_list.indexOf(todo_item))"
+                    @change="editTodoItem(item)"
                   />
                   <span class="checkmark"></span>
                 </label>
@@ -84,7 +84,7 @@
                   class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                   v-focus
                   @keyup.enter="
-                    editTodoItem(item, todo_list.indexOf(todo_item))
+                    editTodoItem(item)
                   "
                   @focusout="on_blur_edit = null"
                 />
@@ -101,7 +101,7 @@
                 class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 v-model="add_todo.title"
                 @keyup.enter="
-                  addTodo(todo_list[todo_list.indexOf(todo_item)].id)
+                  addTodo()
                 "
                 placeholder="Type here"
                 v-focus="input_focus"
@@ -113,7 +113,7 @@
               <button
                 v-if="show_input"
                 class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                @click="addTodo(todo_list[todo_list.indexOf(todo_item)].id)"
+                @click="addTodo()"
               >
                 <i class="la la-plus"></i>
                 Add
@@ -150,8 +150,9 @@ import Sortable from "sortablejs";
 export default {
   name: "TodoItem",
   props: {
-    todo_item: [Array, Object],
-    todo_list: Array,
+    todo_item: [Object],
+    todo_list: [Array],
+    index: [Number]
   },
   directives: {
     focus: {
@@ -221,6 +222,14 @@ export default {
       let find_width = (parseInt(checked_length) * 100) / parseInt(list_length);
       return isNaN(Math.round(find_width)) ? 0 : Math.round(find_width);
     },
+    // add todo
+    addTodo () {
+      // this.todo_list[this.index].items.push({ title: this.add_todo.title, complete: false })
+    },
+    // edit todo item
+    editTodoItem(item) {
+      console.log(item);
+    },
     // select option
     selectedOption(selectedOption) {
       console.log(selectedOption);
@@ -270,233 +279,3 @@ export default {
   },
 };
 </script>
-<style>
-.user-avatar {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-}
-
-.checkBoxContainer {
-  position: relative;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 10px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Hide the browser's default checkbox */
-.checkBoxContainer input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-  margin-left: -13px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background-color: #eee;
-  border-radius: 5px;
-  border: 1px solid #80808066;
-}
-
-/* On mouse-over, add a grey background color */
-.checkBoxContainer:hover input ~ .checkmark {
-  background-color: #ccc;
-}
-
-/* When the checkbox is checked, add a blue background */
-.checkBoxContainer input:checked ~ .checkmark {
-  border: 1px solid #34bfa3;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the checkmark when checked */
-.checkBoxContainer input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.checkBoxContainer .checkmark:after {
-  left: 6px;
-  top: 3px;
-  width: 5px;
-  height: 10px;
-  border: solid #34bfa3;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-.hoverable-icons:hover {
-  background: #f5f6f7;
-}
-
-/* Tooltip css */
-
-.tooltip {
-  display: block !important;
-  z-index: 10000;
-}
-
-.tooltip .tooltip-inner {
-  background: white;
-  color: #212529;
-  border-radius: 5px;
-  padding: 5px 10px 4px;
-  font-size: 12px;
-}
-
-.tooltip .tooltip-arrow {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  position: absolute;
-  margin: 5px;
-  border-color: black;
-  z-index: 1;
-}
-
-.tooltip[x-placement^="top"] {
-  margin-bottom: 5px;
-}
-
-.tooltip[x-placement^="top"] .tooltip-arrow {
-  border-width: 5px 5px 0 5px;
-  border-left-color: transparent !important;
-  border-right-color: transparent !important;
-  border-bottom-color: transparent !important;
-  bottom: -5px;
-  left: calc(50% - 5px);
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.tooltip[x-placement^="bottom"] {
-  margin-top: 5px;
-}
-
-.tooltip[x-placement^="bottom"] .tooltip-arrow {
-  border-width: 0 5px 5px 5px;
-  border-left-color: transparent !important;
-  border-right-color: transparent !important;
-  border-top-color: transparent !important;
-  top: -5px;
-  left: calc(50% - 5px);
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.tooltip[x-placement^="right"] {
-  margin-left: 5px;
-}
-
-.tooltip[x-placement^="right"] .tooltip-arrow {
-  border-width: 5px 5px 5px 0;
-  border-left-color: transparent !important;
-  border-top-color: transparent !important;
-  border-bottom-color: transparent !important;
-  left: -5px;
-  top: calc(50% - 5px);
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.tooltip[x-placement^="left"] {
-  margin-right: 5px;
-}
-
-.tooltip[x-placement^="left"] .tooltip-arrow {
-  border-width: 5px 0 5px 5px;
-  border-top-color: transparent !important;
-  border-right-color: transparent !important;
-  border-bottom-color: transparent !important;
-  right: -5px;
-  top: calc(50% - 5px);
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.tooltip.popover .popover-inner {
-  background: #f9f9f9;
-  color: black;
-  padding: 24px;
-  border-radius: 5px;
-  box-shadow: -3px 2px 52px -14px rgb(0 0 0 / 37%);
-}
-
-.tooltip.popover .popover-arrow {
-  border-color: #f9f9f9;
-}
-
-.tooltip[aria-hidden="true"] {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.15s, visibility 0.15s;
-}
-
-.tooltip[aria-hidden="false"] {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.15s;
-}
-
-.option__image {
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-}
-
-.avatar {
-  border-radius: 50%;
-  position: relative;
-}
-
-.avatars > li:not(:last-child) {
-  margin-right: -0.9rem;
-}
-
-.avatars > li:last-child {
-  margin-right: -0.9rem;
-}
-
-.avatar img {
-  display: block;
-}
-
-.avatars {
-  padding-left: 0;
-  list-style: none;
-  display: flex;
-  margin-bottom: 0;
-}
-
-.btn.btn-danger {
-  padding: 8px !important;
-}
-
-.progress {
-  height: 0.4rem !important;
-}
-
-a {
-  color: #212529;
-}
-</style>
