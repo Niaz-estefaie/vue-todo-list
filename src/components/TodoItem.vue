@@ -17,6 +17,7 @@
             </div>
             <div class="col-9" v-else>
               <input
+                v-model="todo_item.title"
                 class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 v-focus
                 @keyup.enter="editTodo(todo_item)"
@@ -150,9 +151,9 @@ import Sortable from "sortablejs";
 export default {
   name: "TodoItem",
   props: {
-    todo_item: [Object],
-    todo_list: [Array],
-    index: [Number]
+    todo_item: Object,
+    todo_list: Array,
+    index: Number
   },
   directives: {
     focus: {
