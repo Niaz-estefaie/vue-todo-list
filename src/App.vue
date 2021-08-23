@@ -1,5 +1,10 @@
 <template>
-  <todo-list />
+  <div class="container mx-auto">
+    <div class="text-center text-salmon">
+      <h1 class="py-8 text-6xl">TODO LIST</h1>
+    </div>
+    <todo-list />
+  </div>
 </template>
 
 <script>
@@ -12,3 +17,14 @@ export default {
   }
 }
 </script>
+
+<style>
+  body {
+    background: #F8D3D0;
+    color: #919191;
+  }
+
+  .text-salmon {
+    color: #F2B0AA;
+  }
+</style>

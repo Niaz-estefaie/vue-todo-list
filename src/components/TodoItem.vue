@@ -1,142 +1,142 @@
 <template>
   <div id="TodoItem">
-    <div style="padding: 15px;">
+    <div class="p-8">
       <!-- Main row where the card will iterate -->
-      <div class="row">
-        <!-- Title and information part -->
-        <div class="col-12 info-bar px-0">
-          <div class="row align-items-center">
-            <div
-              class="col-9"
-              style="font-size: 15px;font-weight: bold;"
-              v-if="on_blur_edit_main === null"
-            >
-              <span @click="on_blur_edit_main = todo_item.id">
-                {{ todo_item.title }}
-              </span>
-            </div>
-            <div class="col-9" v-else>
-              <input
-                v-model="todo_item.title"
-                class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-                v-focus
-                @keyup.enter="editTodo(todo_item)"
-                @focusout="on_blur_edit_main = null"
-              />
-            </div>
-          </div>
-        </div>
-        <!-- Progress part -->
-        <div class="col-12 progress-part px-0">
-          <div
-            class="align-items-center"
-            style="display: flex;flex-direction: row;"
-          >
-            <div
-              class="progress"
-              :title="computeWidth()"
-              style="order: 2;width: 100%"
-            >
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-lg">
+          <!-- Title and information part -->
+          <div class="info-bar px-0">
+            <div class="align-items-center">
               <div
-                class="progress-bar"
-                :class="computeWidth() == '100' ? ' bg-success' : ''"
-                :style="'width: ' + computeWidth() + '%'"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <!-- List of items part -->
-        <div class="col-12 list-bar">
-          <div ref="list" v-sortable="{ animation: 200, onUpdate: onSortItem }">
-            <div
-              class="row py-2 hoverable-icons align-items-center"
-              @mouseover="show_icons = index"
-              v-for="(item, index) in todo_item.items"
-              style="min-height: 46px"
-              :key="item.id"
-              :id="item.id"
-            >
-              <div
-                class="col-8 px-0"
-                :class="on_blur_edit === item.id ? 'd-flex' : ''"
+                class="font-bold text-center pb-2"
+                v-if="on_blur_edit_main === null"
               >
-                <label class="checkBoxContainer" style="margin: 14px 20px;">
-                  <input
-                    v-model="item.complete"
-                    type="checkbox"
-                    class="h-5 w-5 text-pink-800"
-                    tabindex="-1"
-                    @change="editTodoItem(item)"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-                <span
-                  @click="on_blur_edit = item.id"
-                  v-if="on_blur_edit !== item.id"
-                  :style="
-                    item.complete ? 'text-decoration: line-through grey;' : ''
-                  "
-                >
-                  {{ item.title }}
+                <span @click="on_blur_edit_main = todo_item.id">
+                  {{ todo_item.title }}
                 </span>
+              </div>
+              <div v-else>
                 <input
-                  v-else-if="on_blur_edit === item.id"
-                  v-model="item.title"
                   class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                   v-focus
-                  @keyup.enter="
-                    editTodoItem(item)
-                  "
-                  @focusout="on_blur_edit = null"
+                  @keyup.enter="editTodo(todo_item)"
+                  @focusout="on_blur_edit_main = null"
                 />
               </div>
             </div>
           </div>
-        </div>
-        <!-- Add new list part -->
-        <div class="col-12 add-list">
-          <div class="row py-2">
-            <div class="col-12 px-0" v-if="show_input">
-              <input
-                type="text"
-                class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-                v-model="add_todo.title"
-                @keyup.enter="
-                  addTodo()
-                "
-                placeholder="Type here"
-                v-focus="input_focus"
-              />
+          <!-- Progress part -->
+          <div class="progress-part px-0">
+            <div
+              class="align-items-center"
+              style="display: flex;flex-direction: row;"
+            >
+              <div
+                class="progress"
+                :title="computeWidth()"
+                style="order: 2;width: 100%"
+              >
+                <div
+                  class="progress-bar"
+                  :class="computeWidth() == '100' ? ' bg-success' : ''"
+                  :style="'width: ' + computeWidth() + '%'"
+                ></div>
+              </div>
             </div>
           </div>
-          <div class="row py-2">
-            <div class="col-6">
-              <button
-                v-if="show_input"
-                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                @click="addTodo()"
+          <!-- List of items part -->
+          <div class="list-bar">
+            <div ref="list" v-sortable="{ animation: 200, onUpdate: onSortItem }">
+              <div
+                class="py-2 hoverable-icons align-items-center"
+                @mouseover="show_icons = index"
+                v-for="(item, index) in todo_item.items"
+                style="min-height: 46px"
+                :key="item.id"
+                :id="item.id"
               >
-                <i class="la la-plus"></i>
-                Add
-              </button>
-              <a
-                v-if="show_input"
-                class="m-portlet__nav-link btn m-btn m-btn--hover-default m-btn--icon m-btn--icon-only m-btn--pill"
-                @click="show_input = !show_input"
-              >
-                <i class="la la-remove"></i>
-              </a>
-              <button
-                v-else
-                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                @click="
-                  show_input = !show_input;
-                  input_focus = true;
-                "
-              >
-                <i class="la la-plus"></i>
-                Add
-              </button>
+                <div
+                  class="px-0"
+                  :class="on_blur_edit === item.id ? 'd-flex' : ''"
+                >
+                  <label class="checkBoxContainer mx-4">
+                    <input
+                      v-model="item.complete"
+                      type="checkbox"
+                      class="h-5 w-5 text-pink-800"
+                      tabindex="-1"
+                      @change="editTodoItem(item)"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                  <span
+                    @click="on_blur_edit = item.id"
+                    v-if="on_blur_edit !== item.id"
+                    :style="
+                      item.complete ? 'text-decoration: line-through grey;' : ''
+                    "
+                  >
+                    {{ item.title }}
+                  </span>
+                  <input
+                    v-else-if="on_blur_edit === item.id"
+                    v-model="item.title"
+                    class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    v-focus
+                    @keyup.enter="
+                      editTodoItem(item)
+                    "
+                    @focusout="on_blur_edit = null"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Add new list part -->
+          <div class="add-list">
+            <div class="py-2">
+              <div class="px-0" v-if="show_input">
+                <input
+                  type="text"
+                  class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  v-model="add_todo.title"
+                  @keyup.enter="
+                    addTodo()
+                  "
+                  placeholder="Type here"
+                  v-focus="input_focus"
+                />
+              </div>
+            </div>
+            <div class="py-2">
+              <div>
+                <button
+                  v-if="show_input"
+                  class="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+                  @click="addTodo()"
+                >
+                  <i class="la la-plus"></i>
+                  Add
+                </button>
+                <a
+                  v-if="show_input"
+                  class="m-portlet__nav-link btn m-btn m-btn--hover-default m-btn--icon m-btn--icon-only m-btn--pill"
+                  @click="show_input = !show_input"
+                >
+                  <i class="la la-remove"></i>
+                </a>
+                <button
+                  v-else
+                  class="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+                  @click="
+                    show_input = !show_input;
+                    input_focus = true;
+                  "
+                >
+                  <i class="la la-plus"></i>
+                  Add
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -280,3 +280,9 @@ export default {
   },
 };
 </script>
+
+<style>
+  .checkBoxContainer {
+    vertical-align: middle;
+  }
+</style>
