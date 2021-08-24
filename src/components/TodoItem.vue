@@ -63,11 +63,10 @@
                     <input
                       v-model="item.complete"
                       type="checkbox"
-                      class="h-5 w-5 text-pink-800"
+                      class="h-5 w-5 checked:bg-gray-600 checked:border-transparent"
                       tabindex="-1"
                       @change="editTodoItem(item)"
                     />
-                    <span class="checkmark"></span>
                   </label>
                   <span
                     @click="on_blur_edit = item.id"
