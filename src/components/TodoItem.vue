@@ -59,14 +59,14 @@
                   class="px-0"
                   :class="on_blur_edit === item.id ? 'd-flex' : ''"
                 >
-                  <label class="checkBoxContainer mx-4">
+                  <label class="checkBoxContainer mx-4 after:border-none">
                     <input
-                      v-model="item.complete"
                       type="checkbox"
-                      class="h-5 w-5 checked:bg-gray-600 checked:border-transparent"
+                      v-model="item.complete"
+                      class="h-4 w-4 checked:bg-gray-600 checked:border-transparent"
                       tabindex="-1"
                       @change="editTodoItem(item)"
-                    />
+                    >
                   </label>
                   <span
                     @click="on_blur_edit = item.id"
@@ -283,5 +283,9 @@ export default {
 <style>
   .checkBoxContainer {
     vertical-align: middle;
+  }
+
+  .checkBoxContainer:after {
+    border: none;
   }
 </style>
