@@ -2,7 +2,7 @@
   <div id="TodoItem">
     <div class="p-8">
       <!-- Main row where the card will iterate -->
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4">
         <div class="bg-white p-5 rounded-lg">
           <!-- Title and information part -->
           <div class="info-bar px-0">
@@ -46,7 +46,10 @@
           </div>
           <!-- List of items part -->
           <div class="list-bar">
-            <div ref="list" v-sortable="{ animation: 200, onUpdate: onSortItem }">
+            <div
+              ref="list"
+              v-sortable="{ animation: 200, onUpdate: onSortItem }"
+            >
               <div
                 class="py-2 hoverable-icons align-items-center"
                 @mouseover="show_icons = index"
@@ -66,7 +69,7 @@
                       class="h-4 w-4 checked:bg-gray-600 checked:border-transparent"
                       tabindex="-1"
                       @change="editTodoItem(item)"
-                    >
+                    />
                   </label>
                   <span
                     @click="on_blur_edit = item.id"
@@ -82,9 +85,7 @@
                     v-model="item.title"
                     class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                     v-focus
-                    @keyup.enter="
-                      editTodoItem(item)
-                    "
+                    @keyup.enter="editTodoItem(item)"
                     @focusout="on_blur_edit = null"
                   />
                 </div>
@@ -97,17 +98,16 @@
               <div class="px-0" v-if="show_input">
                 <input
                   type="text"
-                  class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 border border-solid leading-tight border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
                   v-model="add_todo.title"
-                  @keyup.enter="
-                    addTodo()
-                  "
+                  @keyup.enter="addTodo()"
                   placeholder="Type here"
-                  v-focus="input_focus"
+                  required
+                  v-focus
                 />
               </div>
             </div>
-            <div class="py-2">
+            <div class="py-4">
               <div>
                 <button
                   v-if="show_input"
@@ -128,8 +128,7 @@
                   v-else
                   class="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
                   @click="
-                    show_input = !show_input;
-                    input_focus = true;
+                    show_input = !show_input
                   "
                 >
                   <i class="la la-plus"></i>
@@ -152,19 +151,19 @@ export default {
   props: {
     todo_item: Object,
     todo_list: Array,
-    index: Number
+    index: Number,
   },
   directives: {
     focus: {
-      inserted: function(el) {
+      inserted: (el) => {
         el.focus();
       },
     },
     sortable: {
-      inserted: function(el, binding) {
+      inserted: (el, binding) => {
         Sortable.create(el, binding.value || {});
       },
-    },
+    }
   },
   data() {
     return {
@@ -191,7 +190,6 @@ export default {
       show_input: false,
       modal_is_open: false,
       is_card: false,
-      input_focus: true,
       show_icons: null,
       on_blur_edit: null,
       on_blur_edit_main: null,
@@ -199,8 +197,13 @@ export default {
       modal_index: "",
       progressed: "",
       modal_title: "",
-      modal_id: ""
+      modal_id: "",
     };
+  },
+  computed: {
+    Lists() {
+      return this.todo_list;
+    },
   },
   mounted() {
     this.computeWidth();
@@ -223,8 +226,12 @@ export default {
       return isNaN(Math.round(find_width)) ? 0 : Math.round(find_width);
     },
     // add todo
-    addTodo () {
-      // this.todo_list[this.index].items.push({ title: this.add_todo.title, complete: false })
+    addTodo() {
+      this.Lists[this.index].items.push({
+        title: this.add_todo.title,
+        complete: false,
+      });
+      this.add_todo.title = "";
     },
     // edit todo item
     editTodoItem(item) {
@@ -281,11 +288,11 @@ export default {
 </script>
 
 <style>
-  .checkBoxContainer {
-    vertical-align: middle;
-  }
+.checkBoxContainer {
+  vertical-align: middle;
+}
 
-  .checkBoxContainer:after {
-    border: none;
-  }
+.checkBoxContainer:after {
+  border: none;
+}
 </style>
