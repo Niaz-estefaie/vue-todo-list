@@ -2,8 +2,8 @@
   <div id="TodoItem">
     <div class="p-8">
       <!-- Main row where the card will iterate -->
-      <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4">
-        <div class="bg-white p-5 rounded-lg">
+      <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+        <div class="bg-white p-6 rounded-lg">
           <!-- Title and information part -->
           <div class="info-bar px-0">
             <div class="align-items-center">
@@ -52,7 +52,7 @@
               v-sortable="{ animation: 200, onUpdate: onSortItem }"
             >
               <div
-                class="py-2 hoverable-icons align-items-center"
+                class="py-2 hoverable-icons items-center"
                 @mouseover="show_icons = index"
                 v-for="(item, index) in Item.items"
                 style="min-height: 46px"
@@ -60,35 +60,39 @@
                 :id="item.id"
               >
                 <div
-                  class="px-0"
-                  :class="on_blur_edit === item.id ? 'd-flex' : ''"
+                  class="px-0 flex"
                 >
-                  <label class="checkBoxContainer mx-4 after:border-none">
+                  <div class="flex-none">
+                    <label class="checkBoxContainer mr-4 after:border-none">
+                      <input
+                        type="checkbox"
+                        v-model="item.complete"
+                        class="h-4 w-4 checked:bg-gray-600 checked:border-transparent"
+                        tabindex="-1"
+                        :style="on_blur_edit === index ? 'vertical-align: middle;' : ''"
+                        @change="editTodoItem(item)"
+                      />
+                    </label>
+                  </div>
+                  <div class="flex-grow">
+                    <span
+                      @click="on_blur_edit = index"
+                      v-if="on_blur_edit !== index"
+                      :style="
+                        item.complete ? 'text-decoration: line-through grey;' : ''
+                      "
+                    >
+                      {{ item.title }}
+                    </span>
                     <input
-                      type="checkbox"
-                      v-model="item.complete"
-                      class="h-4 w-4 checked:bg-gray-600 checked:border-transparent"
-                      tabindex="-1"
-                      @change="editTodoItem(item)"
+                      v-else-if="on_blur_edit === index"
+                      v-model="item.title"
+                      class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 leading-tight border border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
+                      v-focus
+                      @keyup.enter="editTodoItem(item)"
+                      @focusout="on_blur_edit = null"
                     />
-                  </label>
-                  <span
-                    @click="on_blur_edit = item.id"
-                    v-if="on_blur_edit !== item.id"
-                    :style="
-                      item.complete ? 'text-decoration: line-through grey;' : ''
-                    "
-                  >
-                    {{ item.title }}
-                  </span>
-                  <input
-                    v-else-if="on_blur_edit === item.id"
-                    v-model="item.title"
-                    class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 leading-tight border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
-                    v-focus
-                    @keyup.enter="editTodoItem(item)"
-                    @focusout="on_blur_edit = null"
-                  />
+                  </div>
                 </div>
               </div>
             </div>
@@ -102,9 +106,10 @@
                   class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 border border-solid leading-tight border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
                   v-model="add_todo.title"
                   @keyup.enter="addTodo()"
+                  @focusout="show_input = !show_input"
                   placeholder="Type here"
                   required
-                  v-focus
+                  v-focus="show_input"
                 />
               </div>
             </div>
