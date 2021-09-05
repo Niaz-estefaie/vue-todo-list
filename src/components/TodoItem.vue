@@ -11,15 +11,16 @@
                 class="font-bold text-center pb-2"
                 v-if="on_blur_edit_main === null"
               >
-                <span @click="on_blur_edit_main = todo_item.id">
-                  {{ todo_item.title }}
+                <span @click="on_blur_edit_main = Item.id">
+                  {{ Item.title }}
                 </span>
               </div>
               <div v-else>
                 <input
-                  class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  class="appearance-none mb-2 text-center bg-transparent border border-solid w-full text-gray-700 mr-3 py-1 px-2 leading-tight border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
                   v-focus
-                  @keyup.enter="editTodo(todo_item)"
+                  v-model="Item.title"
+                  @keyup.enter="editTodo(Item)"
                   @focusout="on_blur_edit_main = null"
                 />
               </div>
@@ -53,7 +54,7 @@
               <div
                 class="py-2 hoverable-icons align-items-center"
                 @mouseover="show_icons = index"
-                v-for="(item, index) in todo_item.items"
+                v-for="(item, index) in Item.items"
                 style="min-height: 46px"
                 :key="item.id"
                 :id="item.id"
@@ -83,7 +84,7 @@
                   <input
                     v-else-if="on_blur_edit === item.id"
                     v-model="item.title"
-                    class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 leading-tight border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
                     v-focus
                     @keyup.enter="editTodoItem(item)"
                     @focusout="on_blur_edit = null"
@@ -204,10 +205,13 @@ export default {
     Lists() {
       return this.todo_list;
     },
+    Item() {
+      return this.todo_item
+    }
   },
   mounted() {
     this.computeWidth();
-    return this.todo_item.items.map((item) => {
+    return this.Item.items.map((item) => {
       item.show = false;
     });
   },
@@ -215,12 +219,12 @@ export default {
     // compute the width of progress bar
     computeWidth() {
       let list_length =
-        this.todo_item.items && this.todo_item.items.length > 0
-          ? this.todo_item.items.length
+        this.Item.items && this.Item.items.length > 0
+          ? this.Item.items.length
           : 0;
       let checked_length =
-        this.todo_item.items && this.todo_item.items.length > 0
-          ? this.todo_item.items.filter((item) => item.complete === true).length
+        this.Item.items && this.Item.items.length > 0
+          ? this.Item.items.filter((item) => item.complete === true).length
           : 0;
       let find_width = (parseInt(checked_length) * 100) / parseInt(list_length);
       return isNaN(Math.round(find_width)) ? 0 : Math.round(find_width);
@@ -253,7 +257,7 @@ export default {
 
       for (var i = 0; i < els.length; i++) {
         var id = els[i].getAttribute("id");
-        self.todo_item.items.map(function(item) {
+        self.Item.items.map(function(item) {
           if (item.id == id) {
             return self.sort_items.list.push(item.id);
           }
