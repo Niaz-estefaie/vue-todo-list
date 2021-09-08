@@ -1,11 +1,11 @@
 <template>
   <div id="TodoList" v-cloak>
-    <div ref="list" v-sortable="{ animation: 200, onUpdate: onSort }">
+    <div ref="list" v-sortable="{ animation: 200, onUpdate: onSort }" class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
       <div v-for="(item, index) in todo_list" :key="item.id" :id="item.id">
-        <TodoItem 
+        <TodoItem
           :todo_item="item"
           v-model:todo_list="todo_list"
-          :index="index" 
+          :index="index"
         />
       </div>
     </div>
@@ -47,6 +47,17 @@ export default {
           items: [
             { id: 1, title: "Title 1", complete: false },
             { id: 2, title: "Title 2", complete: true },
+          ],
+        },
+        {
+          title: "Secound list",
+          items: [
+            { id: 6, title: "Title 8", complete: false },
+            { id: 8, title: "Title 2", complete: true },
+            { id: 7, title: "Title ", complete: true },
+            { id: 12, title: "Title final", complete: true },
+            { id: 11, title: "Title 40", complete: true },
+            { id: 10, title: "Title 8", complete: true },
           ],
         },
       ],

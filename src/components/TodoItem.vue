@@ -2,7 +2,7 @@
   <div id="TodoItem">
     <div class="p-8">
       <!-- Main row where the card will iterate -->
-      <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+      <div>
         <div class="bg-white p-6 rounded-lg">
           <!-- Title and information part -->
           <div class="info-bar px-0">
@@ -61,41 +61,42 @@
               >
                 <div class="px-0 flex">
                   <div class="flex-none">
-                    <label class="checkBoxContainer mr-4 after:border-none">
-                      <input
-                        type="checkbox"
-                        v-model="item.complete"
-                        class="h-4 w-4 checked:bg-gray-600 checked:border-transparent"
-                        tabindex="-1"
-                        :style="
-                          on_blur_edit === index
-                            ? 'vertical-align: middle;'
-                            : ''
-                        "
-                        @change="editTodoItem(false, item)"
-                      />
-                    </label>
-                  </div>
-                  <div class="flex-grow">
-                    <span
-                      @click="on_blur_edit = index"
-                      v-if="on_blur_edit !== index"
+                    <input
+                      type="checkbox"
+                      v-model="item.complete"
+                      class="w-4 h-4 checked:bg-gray-600 checked:border-transparent align-middle mr-4 after:border-none"
+                      tabindex="-1"
                       :style="
-                        item.complete
-                          ? 'text-decoration: line-through grey;'
+                        on_blur_edit === index
+                          ? 'vertical-align: middle;'
                           : ''
                       "
-                    >
-                      {{ item.title }}
-                    </span>
-                    <input
-                      v-else-if="on_blur_edit === index"
-                      v-model="item.title"
-                      class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 leading-tight border border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
-                      v-focus
-                      @keyup.enter="editTodoItem(false, item)"
-                      @focusout="on_blur_edit = null"
+                      @change="editTodoItem(false, item)"
                     />
+                    <label>
+                      <i>
+                        <span
+                          @click="on_blur_edit = index"
+                          v-if="on_blur_edit !== index"
+                          class="after:transition-all after:duration-500 after:ease-in-out"
+                          :style="
+                            item.complete
+                              ? 'text-decoration: line-through grey;'
+                              : ''
+                          "
+                        >
+                          {{ item.title }}
+                        </span>
+                        <input
+                          v-else-if="on_blur_edit === index"
+                          v-model="item.title"
+                          class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 leading-tight border border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
+                          v-focus
+                          @keyup.enter="editTodoItem(false, item)"
+                          @focusout="on_blur_edit = null"
+                        />
+                      </i>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -306,13 +307,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.checkBoxContainer {
-  vertical-align: middle;
-}
-
-.checkBoxContainer:after {
-  border: none;
-}
-</style>
