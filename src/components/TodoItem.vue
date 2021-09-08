@@ -20,7 +20,7 @@
                   class="appearance-none mb-2 text-center bg-transparent border border-solid w-full text-gray-700 mr-3 py-1 px-2 leading-tight border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
                   v-focus
                   v-model="Item.title"
-                  @keyup.enter="editTodo(Item)"
+                  @keyup.enter="editTodoItem(true, Item)"
                   @focusout="on_blur_edit_main = null"
                 />
               </div>
@@ -59,9 +59,7 @@
                 :key="item.id"
                 :id="item.id"
               >
-                <div
-                  class="px-0 flex"
-                >
+                <div class="px-0 flex">
                   <div class="flex-none">
                     <label class="checkBoxContainer mr-4 after:border-none">
                       <input
@@ -69,8 +67,12 @@
                         v-model="item.complete"
                         class="h-4 w-4 checked:bg-gray-600 checked:border-transparent"
                         tabindex="-1"
-                        :style="on_blur_edit === index ? 'vertical-align: middle;' : ''"
-                        @change="editTodoItem(item)"
+                        :style="
+                          on_blur_edit === index
+                            ? 'vertical-align: middle;'
+                            : ''
+                        "
+                        @change="editTodoItem(false, item)"
                       />
                     </label>
                   </div>
@@ -79,7 +81,9 @@
                       @click="on_blur_edit = index"
                       v-if="on_blur_edit !== index"
                       :style="
-                        item.complete ? 'text-decoration: line-through grey;' : ''
+                        item.complete
+                          ? 'text-decoration: line-through grey;'
+                          : ''
                       "
                     >
                       {{ item.title }}
@@ -89,7 +93,7 @@
                       v-model="item.title"
                       class="appearance-none bg-transparent w-full text-gray-700 mr-3 py-1 px-2 leading-tight border border-gray-500 border-l-0 border-r-0 border-t-0 focus:outline-none"
                       v-focus
-                      @keyup.enter="editTodoItem(item)"
+                      @keyup.enter="editTodoItem(false, item)"
                       @focusout="on_blur_edit = null"
                     />
                   </div>
@@ -133,9 +137,7 @@
                 <button
                   v-else
                   class="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
-                  @click="
-                    show_input = !show_input
-                  "
+                  @click="show_input = !show_input"
                 >
                   <i class="la la-plus"></i>
                   Add
@@ -169,7 +171,7 @@ export default {
       inserted: (el, binding) => {
         Sortable.create(el, binding.value || {});
       },
-    }
+    },
   },
   data() {
     return {
@@ -211,8 +213,8 @@ export default {
       return this.todo_list;
     },
     Item() {
-      return this.todo_item
-    }
+      return this.todo_item;
+    },
   },
   mounted() {
     this.computeWidth();
@@ -243,8 +245,17 @@ export default {
       this.add_todo.title = "";
     },
     // edit todo item
-    editTodoItem(item) {
-      console.log(item);
+    editTodoItem(isParent, item) {
+      if (isParent) {
+        this.Item.title = item.title;
+        this.on_blur_edit_main = null;
+      } else {
+        const filteredItem = this.Item.items.filter(
+          (child) => child.id === item.id
+        )[0];
+        filteredItem.title = item.title;
+        this.on_blur_edit = null;
+      }
     },
     // select option
     selectedOption(selectedOption) {
