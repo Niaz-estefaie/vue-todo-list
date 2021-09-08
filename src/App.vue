@@ -1,7 +1,12 @@
 <template>
   <div class="container mx-auto">
-    <div class="text-center text-salmon">
-      <h1 class="py-8 text-6xl">TODO LIST</h1>
+    <div class="text-center text-salmon py-8">
+      <h1 class="text-6xl inline-block mx-4">TODO LIST</h1>
+      <img
+        class="w-11 h-auto inline-block align-baseline"
+        src="./assets/images/to-do-list.png"
+        alt="Alt"
+      >
     </div>
     <todo-list />
   </div>
